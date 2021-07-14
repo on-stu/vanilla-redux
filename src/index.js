@@ -4,15 +4,33 @@ const plus = document.getElementById("plus");
 const minus = document.getElementById("minus");
 const number = document.querySelector("span");
 
-const countModifier = (count = 0) => {  //initialize default value
-  return count;  // count는 state 형식을 가진다
+number.innerText = 0;
+
+const countModifier = (count = 0, action) => {  //initialize default value
+  if (action.type === "ADD") {
+    return count + 1;
+  }else if(action.type === "MINUS"){
+    return count - 1;
+  }else{
+    return count;  // count는 state 형식을 가진다
+  }  
 };
+const countStore = createStore(countModifier); 
+// countModifier(any data modifier)는 reducer라고 한다!
+
+const onChange = () => {
+  number.innerText = countStore.getState();
+}
+
+countStore.subscribe(onChange);
 
 
-const countStore = createStore(countModifier);
 
-console.log(countStore.getState())
+plus.addEventListener("click", () => countStore.dispatch({type: "ADD"}));
+minus.addEventListener("click", () => countStore.dispatch({type: "MINUS"}));
 
+
+/* Redux를 사용하지 않는 방법 - Vanilla JS */
 
 // let counter = 0;
 
